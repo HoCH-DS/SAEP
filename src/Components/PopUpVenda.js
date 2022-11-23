@@ -1,20 +1,50 @@
-import React from "react";
+import React, { useEffect } from "react";
 import api from "../Services/api";
 import styles from '../Styles/PopUpVenda.module.css'
 
 export default class PopUpVenda extends React.Component {
+
+    state = {
+        clientes: [],
+        concessionarias: []
+    }
+
+    handleChangeClientes = (clientes) => { this.setState({ clientes }) }
+    handleChangeConcessionarias = (concessionarias) => { this.setState({ concessionarias })}
+
     render() {
 
-        function getCliente() {
-            api.get('').then(
+        const {cliente} = this.props
 
+        const getCliente = () => {
+            api.get('api/cliente/list').then(response => {
+                this.handleChangeClientes(response.data)
+            }
             )
         }
 
-        function getConcessionaria() {
-            api.get('').then(
-
+        const getConcessionarias = () => {
+            api.get('api/concessionaria/list').then(response => {
+                this.handleChangeConcessionarias(response.data)
+            }
             )
+        }
+
+        getCliente()
+        getConcessionarias()
+
+         async function Vender() {
+            const cliente = document.getElementById("cliente").value
+            const concessionaria = document.getElementById("concessionaria").value
+
+            let alocacao = (await api.get(`api/alocacao/${localStorage.getItem("idAlocacao")}`)).data
+            console.log(alocacao);
+
+            alocacao.quantidade = alocacao.quantidade - 1
+
+            api.put(`api/alocacao/${localStorage.getItem("idAlocacao")}`, alocacao).then(response => {
+                alert("Venda realizada com sucesso")
+            })
         }
 
         return (
@@ -27,15 +57,17 @@ export default class PopUpVenda extends React.Component {
                     <div className={styles.formContainer}>
                         <span className={styles.linha}>
                             <div className={styles.info}>
-                                <p className={styles.text}>Cliente :</p> 
-                                <select className={styles.select} required ></select>
+                                <p className={styles.text}>Cliente :</p>
+                                <select className={styles.select} id={"cliente"} required > {this.state.clientes.map((c) => <option value={c.id}>{c.nome}</option>)}</select>
                             </div>
                             <div className={styles.info}>
-                                <p className={styles.text}>Concessionaria : </p> 
-                                <select className={styles.select} required ></select>
+                                <p className={styles.text}>Concessionaria : </p>
+                                <select className={styles.select} id={"concessionaria"} required>
+                                    {this.state.concessionarias.map((c) => <option value={c.id}>{c.concessionaria}</option>)}
+                                </select>
                             </div>
                         </span>
-                        <button className={styles.btn}>Vender</button>
+                        <button onClick={Vender} className={styles.btn}>Vender</button>
                     </div>
                 </div>
             </div>
@@ -43,9 +75,17 @@ export default class PopUpVenda extends React.Component {
     }
 }
 
-function FecharVenda() {  
+function FecharVenda() {
     const popUp = document.getElementById("containerVenda")
     popUp.style.display = "none"
+
+    localStorage.removeItem("idAlocacao")
 }
-    
+
+export function AbrirPopUpVenda(id) {
+    const popUp = document.getElementById("containerVenda")
+    popUp.style.display = "flex"
+
+    localStorage.setItem("idAlocacao", id)
+}
 

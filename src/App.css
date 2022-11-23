@@ -1,3 +1,11 @@
 .App {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
+.area:hover{
+    transform: scale(1.05);
+}
+
+.area{
+    transition: 0.2s linear;
+}

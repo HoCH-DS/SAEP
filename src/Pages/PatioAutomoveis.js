@@ -7,14 +7,32 @@ import styles from '../Styles/Patio.module.css'
 export default function PatioAutomoveis() {
 
     const [alocacoes, setAlocacoes] = useState([])
+    const [clientes, setClientes] = useState([])
+    const [concessionaria, setConcessionarias] = useState([])
 
     useEffect(() => {
+        getCliente()
+        getConcessionarias()
+    }, [])
 
-    },[])
+    const getCliente = () => {
+        api.get('api/cliente/list').then(response => {
+            setClientes(response.data)
+        }
+        )
+    }
+
+    const getConcessionarias = () => {
+        api.get('api/concessionaria/list').then(response => {
+            setConcessionarias(response.data)
+        }
+        )
+    }
 
     return (
         <div className={styles.container}>
             <PopUp setAlocacoes={alocacoes} />
+            <PopUpVenda clientes={clientes} concessionarias={concessionaria} />
             <div onClick={() => Abrir("1")} className={`${styles.local1} area`}>1</div>
 
             <div onClick={() => Abrir("2")} className={`${styles.local2} area`}>2</div>
@@ -43,7 +61,47 @@ export default function PatioAutomoveis() {
     function Abrir(area) {
         const popUp = document.getElementById("container")
         popUp.style.display = "flex"
-    
+        const areaTitle = document.getElementById("areaTitle")
+
+        switch (area) {
+            case "1":
+                areaTitle.innerHTML = "Área 1"
+                break;
+            case "2":
+                areaTitle.textContent = "Área 2"
+                break;
+            case "3":
+                areaTitle.textContent = "Área 3"
+                break;
+            case "4":
+                areaTitle.textContent = "Área 4"
+                break;
+            case "5":
+                areaTitle.textContent = "Área 5"
+                break;
+            case "6":
+                areaTitle.textContent = "Área 6"
+                break;
+            case "7":
+                areaTitle.textContent = "Área 7"
+                break;
+            case "8":
+                areaTitle.textContent = "Área 8"
+                break;
+            case "9":
+                areaTitle.textContent = "Área 9"
+                break;
+            case "10":
+                areaTitle.textContent = "Área 10"
+                break;
+            case "11":
+                areaTitle.textContent = "Área 11"
+                break;
+
+            default:
+                break;
+        }
+
         api.get(`api/alocacao/list/${area}`).then(response => {
             setAlocacoes(response.data)
         })

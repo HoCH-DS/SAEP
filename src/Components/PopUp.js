@@ -15,7 +15,7 @@ export default class PopUp extends React.Component {
                     <span className={styles.close} onClick={Fechar} >x</span>
                     <div className={styles.titles}>
 
-                        <h1 className={styles.title}>Area 10</h1>
+                        <h1 className={styles.title} id="areaTitle">aaa</h1>
                     </div>
                     <div className={styles.formContainer}>
                         {setAlocacoes.map((a, key) =>
@@ -27,7 +27,6 @@ export default class PopUp extends React.Component {
                         )}
                     </div>
                 </div>
-                <PopUpVenda />
             </div>
         );
     }
